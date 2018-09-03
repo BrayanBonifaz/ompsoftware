@@ -1,0 +1,17 @@
+@import "~style/variables";
+
+.footer {
+  display: flex;
+  bottom: 0;
+  width: 100%;
+  height: 35px;
+  line-height: 35px;
+  background-color: $yellow-afp-color;
+  margin-top: 15px;
+}
+
+.footer>.container span {
+  font-family: "DINPro-Medium";
+  color: $blue-afp-color;
+  text-align: center;
+}

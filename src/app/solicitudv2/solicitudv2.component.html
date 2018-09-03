@@ -1,0 +1,175 @@
+<div class="main-content">
+
+  <div class="container-fluid">
+    <div class="row">
+
+      <div class="col-6 table-title">
+          Registro de Solicitudv2es de Reprocesamiento
+      </div>
+      <div class="col-6">
+          <div class="pull-right">
+              <select class="select-afp">
+                <option value="0" selected>Todos</option>
+                <option value="1">Aprobadas</option>
+                <option value="2">Pendientes</option>
+                <option value="3">Rechazadas</option>
+              </select>
+            </div>
+      </div>
+    </div>
+  </div>
+
+  <p-table [value]="rows" class="table table-hover" [lazy]="true" dataKey="CodigoSolRep" [columns]="cols" dataKey="CodigoSolRep"
+    [rows]="page.sizePerPage" #dataTableComp selectionMode="multiple" [(selection)]="selectedSols" (onLazyLoad)="loadSolicityLazy($event)"
+    [totalRecords]="page.totalElements" (loading)="isLoading">
+
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 2.25em">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th style="width: 7.5em">Código</th>
+        <th style="width: 11em">Fecha de Solicitudv2</th>
+        <th>Título</th>
+        <th style="width: 8em">Estado</th>
+        <th style="width: 8em">Aprobar Solicitudv2</th>
+        <th style="width: 8em">Procesar carga</th>
+        <th style="width: 11em">Fecha a Procesar</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="row"></p-tableCheckbox>
+        </td>
+        <td>
+          <a (click)="openSolicitudv2(row)" href="#">{{row.codigoSolRep}}</a>
+        </td>
+        <td>{{row.fechaCreacion | date:'dd-MM-yyyy HH:mm:ss'}} </td>
+        <td>{{row.tituloSolRep}}</td>
+        <td>{{row.estadoDes}}</td>
+        <td>
+          <ng-container >
+            <button type="button" title="Aprobar Solicitudv2"  (click)="aprobarSolicitudv2(row)" class="btn btn-primary">
+                <i class="fa fa-caret-square-o-right"></i> 
+            </button>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container >
+            <button type="button" title="Procesar carga"  (click)="procesamiento(row)" class="btn btn-primary">
+                <i class="fa fa-caret-square-o-right"></i> 
+            </button>
+          </ng-container>
+        </td>
+        <td>{{row.fechaSolRep | date:'dd-MM-yyyy'}}</td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+
+    </div>
+    <div class="col-6">
+      <app-paginator [rows]="page.sizePerPage"
+              [totalRecords]="page.totalElements"
+              (onPageChange)="onPageChange($event)">
+      </app-paginator>
+    </div>
+    <div class="col" style="text-align:right">
+      {{page.totalElements}} Registros encontrados
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="padding-top:15px">
+  <div class="row">
+      <div class="col"></div>
+      <div class="col-11">
+          <button class="btn-afp btn-afp-blue text-yellow"  (click)="showModal(null)">
+            <i class="fa fa-plus"></i> Registrar una nueva Solicitudv2
+          </button>
+          <button class="btn-afp btn-afp-light-blue" [(disabled)]="!selectedSols" (click)="anular(selectedSols)">
+            <i class="fa fa-close"></i> Anular Seleccionados
+          </button>
+      </div>
+  </div>
+</div>
+
+
+<p-dialog baseZIndex="100" class="dialogHeader" [(visible)]="displayModal" modal="modal" width="600" [responsive]="true" [draggable]="false">
+  <p-header class="dialogHeader">
+    {{titleModal}}
+  </p-header>
+  <form #form="ngForm" (ngSubmit)="onSubmit(form.value)">
+    <div class="col-sm-12">
+      
+      <div class="form-group row">
+        <label for="tituloSolRep" class="col-4 col-form-label label-afp">Título de Solicitudv2</label>
+        <div class="col-8">
+          <input required type="text" [ngModel]="curSolicitudv2?.TituloSolRep" name="tituloSolRep" #tituloSolRep="ngModel" class="input-afp"
+            id="tituloSolRep" [disabled]="isPreview" tooltipStyleClass="max-width: 400px" pTooltip="Ingrese el título de solicitudv2">
+          <p class="text-danger" *ngIf="tituloSolRep.touched && !tituloSolRep.valid && tituloSolRep.errors.required">* Complete este campo!</p>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="fechaSolRep" class="col-4 col-form-label label-afp">Fecha a Procesar</label>
+        <div class="col-8">
+          <p-calendar required [disabled]="isPreview" [minDate]="minDate" id="fechaSolRep" name="fechaSolRep" [ngModel]="myDate" #fechaSolRep="ngModel"
+            dateFormat="dd/mm/yy" showIcon="true">
+          </p-calendar>
+          <p class="text-danger" *ngIf="fechaSolRep.touched && !fechaSolRep.valid && fechaSolRep.errors.required">* Complete este campo!</p>
+        </div>
+      </div>
+
+      <div class="form-group row">
+        <label for="razonSocialBanco" class="col-4 col-form-label label-afp">Razon Social Banco</label>
+        <div class="col-8">
+          <input required type="text" [ngModel]="curSolicitudv2?.TituloSolRep" name="razonSocialBanco" #razonSocialBanco="ngModel" class="input-afp"
+            id="razonSocialBanco" [disabled]="isPreview" tooltipStyleClass="max-width: 400px" pTooltip="Ingrese el título de solicitudv2">
+          <p class="text-danger" *ngIf="razonSocialBanco.touched && !razonSocialBanco.valid && razonSocialBanco.errors.required">* Complete este campo!</p>
+        </div>
+
+      </div>
+
+      <div class="form-group row">
+        <label for="mensaje" class="col-3 col-form-label label-afp">Descripción</label>
+        <div class="col-12">
+          <p-editor required id="mensaje" name="mensaje" #mensaje="ngModel" [ngModel]="curSolicitudv2?.DetalleSolRep" [style]="{'height':'200px'}">
+            <p-header>
+              <span class="ql-formats">
+                <button class="ql-bold" aria-label="Bold"></button>
+                <button class="ql-italic" aria-label="Italic"></button>
+                <button class="ql-underline" aria-label="Underline"></button>
+              </span>
+            </p-header>
+          </p-editor>
+          <p class="text-danger" *ngIf="mensaje.touched && !mensaje.valid && mensaje.errors.required">* Complete este campo!</p>
+        </div>
+      </div>
+    </div>
+    <div align="center">
+      <button class="btn-afp btn-afp-blue" type="submit" [disabled]="!form.valid">
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <button class="btn-afp btn-afp-light-blue" type="button" [disabled]="isPreview" (click)="displayModal=false;isPreview=false">
+        <i class="fa fa-close"></i> Cancelar
+      </button>
+    </div>
+    <hr>
+    <p-footer>
+
+    </p-footer>
+  </form>
+</p-dialog>
+
+<p-confirmDialog header="Confirmación de Anular" icon="fa fa-question-circle" width="425" #cd>
+  <p-footer>
+    <button type="button" pButton icon="fa-close" label="No" (click)="cd.reject()"></button>
+    <button type="button" pButton icon="fa-check" label="Si" (click)="cd.accept()"></button>
+  </p-footer>
+</p-confirmDialog>

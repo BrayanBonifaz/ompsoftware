@@ -1,0 +1,39 @@
+<div class="navbar-main">
+    <nav class="navbar navbar-expand-lg navbar-light ">
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                
+                <li class="nav-item dropdown">
+                    <a class="nav-link" href="#">Correos Electronicos
+                        <span class="sr-only">(current)</span>
+                    </a>
+                </li>
+
+                <li class="nav-item dropdown" ngbDropdown>
+                    <a class="nav-link dropdown-toggle" id="navbarDropdownMenuLink" 
+                    role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+                    href="#" ngbDropdownToggle>
+                        Solicitud de Reprocesamiento
+                    </a>
+                    <div ngbDropdownMenu class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Aprobación</a>
+                        <a class="dropdown-item" href="#">Registro</a>
+                    </div>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link"[routerLink]="['/solicitudv2']"> Solicitud Banco</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link"[routerLink]="['/log']">Procesamientos</a>
+                </li>
+
+                <li class="nav-item dropdown">
+                    <a class="nav-link"[routerLink]="['/lotes']">Lotes</a>
+                </li>
+
+            </ul>
+        </div>
+    </nav>
+</div>

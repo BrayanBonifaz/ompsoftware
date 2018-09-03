@@ -1,0 +1,216 @@
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="table-title col-12" style="color: blue;">Generación de Lote ( Lista Planillas )</div>
+    </div>
+    <hr>
+    <div class="form-group row">
+      <div class="col-sm-2">
+        <label for="referencia" class="label-afp">Descripción: 
+          <span style="color:red;"><font size="4">*</font></span>
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <input id="referencia"  name="referencia" [(ngModel)]="referencia"  class="input-afp form-control" maxlength="100">
+      </div>
+      <div class="col-sm-6"></div>
+    </div>
+    <div class="form-group row">
+      <div class="col-sm-2">
+        <label for="fechaProceso" class="label-afp">Fecha Proceso: </label>
+      </div>
+      <div class="col-sm-10">
+        <p-calendar id="fechaProceso" name="fechaProceso" [(ngModel)]="fechaP" [minDate]="minDate" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" showIcon="true"></p-calendar>
+      </div>
+    </div>
+    <div class="form-group row">
+      <p-table #dataTableComp 
+                [value]="rows" 
+                [lazy]="true" 
+                dataKey="numeroPlanilla" 
+                [columns]="cols" 
+                [paginator]="true"
+                [rows]="20" 
+                selectionMode="multiple"
+                [(selection)]="selectedPlanillas" 
+                (onLazyLoad)="loadLoteLazy($event)"
+                [(totalRecords)]="totalRecords"
+                (loading)="isLoading"
+                class="table table-hover"
+                (onHeaderCheckboxToggle)="isChecked = $event.checked">
+        <ng-template pTemplate="header">
+          <tr>
+            <th style="width: 2.25em">
+              <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+            </th>
+            <th>#Planilla</th>
+            <th>#Lote</th>
+            <th>Fecha de Pago</th>
+            <th>#Afiliados Afectados</th>
+            <th>Monto</th>
+            <th>Devengue</th>
+          </tr>
+        </ng-template>
+        <ng-template pTemplate="body" let-row>
+          <tr>
+            <td>
+              <p-tableCheckbox [value]="row"></p-tableCheckbox>
+            </td>
+            <td>{{row.numeroPlanilla}}</td>
+            <td>{{row.numeroLote}}</td>
+            <td>{{row.fechaPago ? ( row.fechaPago | date:'dd-MM-yyyy') : ''}}</td>
+            <td>{{row.cantAfiliados}}</td>
+            <td>{{row.monto}}</td>
+            <td>{{row.devengue}}</td>
+          </tr>
+        </ng-template>
+      </p-table>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col-6">
+    </div>
+    <div class="col" style="text-align:right">
+      <span><font size="1">{{totalRecords}} Registros encontrados</font></span>
+    </div>
+  </div>
+</div>
+
+<div class="container-fluid" style="margin-top: 30px">
+  <div class="form-group row">
+    <div class="col"></div>
+    <div class="col-sm-11">
+      <button class="btn-afp btn-afp-blue text-yellow" style="width: 250px" (click)="showModal(null)">
+        <i class="fa fa-plus"></i> Agregar
+      </button>
+      <button class="btn-afp btn-afp-light-blue" style="width: 250px" (click)="anular(selectedPlanillas)">
+        <i class="fa fa-close"></i> Quitar
+      </button>
+      <button class="btn-afp btn-afp-blue text-yellow" style="width: 250px" (click)="guardar()" >
+        <i class="fa fa-check"></i> Guardar
+      </button>
+      <button class="btn-afp btn-afp-light-blue" style="width: 250px" routerLink="/lotes">
+        <i class="fa fa-close"></i> Cancelar
+      </button>
+    </div>
+  </div>
+
+</div>
+<p-confirmDialog acceptLabel="Si" rejectLabel="No"></p-confirmDialog>
+<p-dialog [resizable]="false" [showHeader]="false" [closable] = "false" [(visible)]="displayProgressBar" [width]="120" [height]="150" modal="modal" [responsive]="true"  [contentStyle]="{'overflow-x':'hidden','overflow-y':'hidden'}">
+  <div class="loader" align="center"  ></div>
+</p-dialog>
+
+<p-dialog 
+    [draggable]="false"  
+    [resizable]="false" 
+    width="900"
+    height = "600"
+    class="dialogHeader" 
+    [responsive]="true" 
+    [(visible)]="displayModal" 
+    modal="modal" 
+    [contentStyle]="{'overflow':'auto','max-height':'600px','height':'600px'}">
+  <p-header class="dialogHeader">
+    <span style="color: blue;"><font size="4">Generación de Lote ( Lista Planillas )</font></span>
+  </p-header>
+  <div class="form-group row">
+    <div class="col-sm-2">
+        <label class="label-afp">Buscar por: </label>
+    </div>
+    <div class="col-sm-3">
+      <label class="label-afp"><input id="op1" #op1 type="radio" name="tipoFiltro" checked>Fecha y Alifiliados</label>
+    </div>
+    <div class="col-sm-3">
+      <label class="label-afp"><input id="op2" #op2 type="radio" name="tipoFiltro">#Planilla</label>
+    </div>
+    <div class="col-sm-4">        
+    </div>
+  </div>
+  <ng-template [ngIf]="op1.checked">
+    <div class="form-group row">
+      <div class="col-sm-1">
+        <label class="label-afp">Desde:</label>
+      </div>
+      <div class="col-sm-3">
+        <p-calendar id="desde" name="desde" [(ngModel)]="dFecha"  dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" showIcon="true"></p-calendar>
+      </div>
+      <div class="col-sm-1">
+        <label class="label-afp">Hasta:</label>
+      </div>
+      <div class="col-sm-3">       
+        <p-calendar id="hasta" name="hasta" [(ngModel)]="hFecha" dateFormat="dd/mm/yy" placeholder="dd/mm/yyyy" showIcon="true"></p-calendar> 
+      </div>
+      <div class="col-sm-1">
+        <label class="label-afp">#Afiliados:</label>
+      </div>
+      <div class="col-sm-3">
+        <input id="afiliados" name="afiliados" [(ngModel)]="afiliados" maxlength="9" (keydown)="isNumeric(2,$event)" >
+        <button style="margin-left: 5px"class="btn btn-primary btn-sm" (click)="filterPlanillaFechaModal()">
+            <i class="fa fa-filter"></i>
+        </button>
+      </div>
+    </div>
+  </ng-template>  
+  <ng-template [ngIf]="op2.checked">
+    <div class="form-group row">
+      <div class="col-sm-1">
+        <label class="label-afp">#Planilla:</label>
+      </div>
+      <div class="col-sm-2">
+         <input id="n_planilla" #box name="n_planilla" [(ngModel)]="n_planilla" maxlength="9" (keyup.enter)="isNumeric(1,box.value)" (blur)="isNumeric(1,box.value)">
+      </div>
+      <div class="col-sm-1">
+         <button style="margin-left: 5px"class="btn btn-primary btn-sm" (click)="filterPlanillaModal()"><i class="fa fa-filter"></i></button>
+      </div>
+      <div class="col-sm-5">
+      </div>
+    </div>
+  </ng-template>
+  <div class="container-fluid">
+    <p-table [value]="rowsM" class="table table-hover" [lazy]="true" dataKey="numeroPlanilla" [columns]="cols" [paginator]="true" [rows]="10" #dataTableComp selectionMode="multiple" [(selection)]="selectedModalPlanillas" (onLazyLoad)="loadLoteModalLazy($event)" (loading)="isLoadingM" [totalRecords]="totalRecordsM" (onHeaderCheckboxToggle)="isCheckedModal = $event.checked">  
+      <ng-template pTemplate="header" >
+        <tr class="encabezado-table">
+          <th style="width: 2.25em"> <p-tableHeaderCheckbox ></p-tableHeaderCheckbox></th>
+          <th>#Lote</th>
+          <th>#Planilla</th>
+          <th>Fecha de Pago</th>
+          <th>#Afiliados</th>
+          <th>Monto</th>
+          <th>Devengue</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <td><p-tableCheckbox [value]="row"></p-tableCheckbox></td>
+          <td>{{row.numeroLote}}</td>
+          <td>{{row.numeroPlanilla}}</td>
+          <td>{{row.fechaPago ? ( row.fechaPago | date:'dd-MM-yyyy') : ''}}</td>
+          <td>{{row.cantAfiliados}}</td>
+          <td>{{row.monto}}</td>
+          <td>{{row.devengue}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12" style="text-align:right">
+      <span><font size="1">{{totalRecordsM}} Registros encontrados</font></span> 
+    </div>
+  </div>
+  <div class="form-group row" align="center">
+    <div class="col-sm-12">
+      <button class="btn-afp btn-afp-blue" (click)="agregar(selectedModalPlanillas)">
+        <i class="fa fa-check"></i> Agregar
+      </button>
+      <button class="btn-afp btn-afp-light-blue" (click)="hideModal(null)">
+        <i class="fa fa-close"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</p-dialog>

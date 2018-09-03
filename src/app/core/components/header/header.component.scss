@@ -1,0 +1,55 @@
+@import "~style/variables";
+$logo-height:80px;
+nav {
+  height: $header-height;
+  width: 100%;
+}
+
+nav a img {
+  height: $header-height - 40;
+}
+
+ul {
+  height: $logo-height;
+}
+
+li>.greeting {
+  height: $logo-height;
+  position: relative;
+  bottom: 0;
+  display: table-cell;
+  vertical-align: middle;
+  text-align: right;
+  padding-right: 10px;
+}
+
+div >.welcome {
+  font-size: 90%;
+  padding-bottom: 0;
+  margin-bottom: 0;
+  font-family: $font-family-Bold;
+  color: $blue-afp-color;
+  height: 18px;
+}
+
+div >.time {
+  font-size: 75%;
+  font-family: $font-family-Light;
+  height: 14px;
+}
+
+.avatar {
+  height: $logo-height;
+  padding: 0;
+  position: relative;
+  bottom: 0;
+  display: table-cell;
+  vertical-align: middle;
+}
+
+.avatar img {
+  width: 60px;
+  height: 60px;
+  margin: 0;
+  padding: 0;
+}

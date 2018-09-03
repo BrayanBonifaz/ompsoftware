@@ -1,0 +1,156 @@
+<!--<mat-progress-spinner mode="indeterminate"></mat-progress-spinner>-->
+<!--<mat-progress-bar mode="query"></mat-progress-bar>-->
+<!--<p-progressSpinner></p-progressSpinner>-->
+<!--<p-progressBar ></p-progressBar>-->
+<div class="main-content">
+  <div class="container-fluid">
+    <div class="row">
+      
+      <div class="table-title"><span style="color: blue;"><font size="4">Generación de Lotes ( Acreditación )</font></span></div>
+    </div>
+  </div>
+  <p-table [value]="rows" class="table table-hover" [lazy]="true" dataKey="n_loac_id" [columns]="cols"
+           [rows]="page.sizePerPage" #dataTableComp selectionMode="multiple" [(selection)]="selectedSols" (onLazyLoad)="loadLoteLazy($event)" [totalRecords]="page.totalElements"
+           (loading)="isLoading" [responsive]="true" >
+    <ng-template pTemplate="header">
+      <tr align="center">
+        <th style="width:9%">#Lote</th>
+        <th style="width:9%">Fecha Proceso</th>
+        <th style="width:9%">Descripción</th>
+        <th style="width:9%">Nro Afiliados</th>
+        <th style="width:9%">Fecha Registro</th>
+        <th style="width:9%">Estado</th>
+        <th style="width:5%">Simular</th>
+        <th style="width:5%">Acreditar</th>
+        <th style="width:5%">Reporte Sim.</th>
+        <th style="width:5%">Reporte Acre.</th>
+        <th style="width:5%">Anular</th>
+        <th style="width:5%">Planillas</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-row>
+      <tr align="center">
+        <td>{{row.numLote}}</td>
+        <td>{{row.fechaProceso | date:'dd-MM-yyyy'}}</td>
+        <td>{{row.descLote}}</td>
+        <td>{{row.numAfiliados}}</td>
+        <td>{{row.fechaCreacion | date:'dd-MM-yyyy HH:mm:ss'}} </td>
+        <td>{{row.estadoDescripcion}}
+          <ng-container *ngIf="row.estadoLote =='EJS' || row.estadoLote =='EJA'">
+            <img src="assets/images/enProceso.gif" style="width: 15px; height: 15px;">
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="row.estadoLote =='PEN' || row.estadoLote =='SIM' || row.estadoLote =='ERS'">
+            <button type="button" title="Simular" (click)="simular(row.loteId)" class="btn btn-primary">
+                <i class="fa fa-caret-square-o-right"></i> 
+            </button>
+          </ng-container>
+        </td>
+        <td>
+          <ng-container *ngIf="row.estadoLote =='SIM' || row.estadoLote =='ERA'">
+            <button type="button" title="Acreditar" (click)="acreditar(row.loteId)" class="btn btn-primary">
+                <i class="fa fa-caret-square-o-right"></i> 
+            </button>
+          </ng-container>
+        </td>        
+        <td>
+          <ng-container *ngIf="row.estadoLote =='SIM'" >
+            <button title="Reporte de Simulación" class="btn btn-primary" title="Reporte Simulación" (click)="reporteSimulacion(row.loteId)">
+              <i class="fa fa-cloud-download"></i> 
+            </button>
+          </ng-container>
+        </td>
+        <td>
+          <button type="button" *ngIf="row.estadoLote =='ACR' && row.flagUltimoProceso =='S'" title="Reporte de Acreditacion" class="btn btn-primary" (click)="reporteAcreditacion(row.loteId)">
+              <i class="fa fa-cloud-download"></i> 
+          </button>
+        </td>
+        <td>
+            <ng-container *ngIf="row.estadoLote =='PEN' || row.estadoLote =='SIM' || row.estadoLote =='ERS' || row.estadoLote =='ERA'">
+              <button class="btn btn-primary" title="Anular" (click)="anular(row.loteId)">
+                <i class="fa fa-close"></i> 
+              </button>
+            </ng-container>
+        </td>
+        <td>
+            <!--<ng-container *ngIf="row.estadoLote =='PEN' || row.estadoLote =='SIM'"> -->
+              <button class="btn btn-primary" title="Ver Planillas"(click)="showModal(row.loteId)">
+                <i class="fa fa-search"></i>
+              </button>
+            <!--</ng-container>-->
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</div>
+<div class="container-fluid" style="padding-top:15px">
+  <div class="row">
+    <div class="col">
+    </div>
+    <div class="col-11">
+      <ng-container *ngIf="validarBotonRegistrarLote()">
+        <button class="btn-afp btn-afp-blue text-yellow" style="width: 250px" routerLink="./agregar">
+          <i class="fa fa-plus"></i> Registrar Lote
+        </button>
+      </ng-container>
+    </div>
+  </div>
+</div>
+
+<p-confirmDialog acceptLabel="Si" rejectLabel="No"></p-confirmDialog>
+<p-dialog [resizable]="false" [showHeader]="false" [closable] = "false" [(visible)]="displayProgressBar" [width]="120" [height]="150" modal="modal" [responsive]="true"  [contentStyle]="{'overflow-x':'hidden','overflow-y':'hidden'}">
+  <div class="loader" align="center"  ></div>
+</p-dialog>
+
+
+<p-dialog 
+    [draggable]="false"  
+    [resizable]="false" 
+    width="600"
+    height = "600"
+    class="dialogHeader" 
+    [(visible)]="displayModal" 
+    modal="modal" 
+    [responsive]="true" 
+    [contentStyle]="{'overflow':'auto','max-height':'600px','height':'600px'}">
+  <p-header class="dialogHeader">
+     Planillas 
+  </p-header>
+  <div class="container-fluid">
+    <p-table #dt [columns]="cols" [value]="rowsM" [paginator]="true" [rows]="14" class="table table-hover" >  
+      <ng-template pTemplate="header">
+        <tr class="encabezado-table">
+          <!--<th>#Lote</th>-->
+          <th>#Planilla</th>
+          <th>Fecha de Pago</th>
+          <th>#Afiliados</th>
+          <th>Monto</th>
+          <th>Devengue</th>
+        </tr>
+      </ng-template>
+      <ng-template pTemplate="body" let-row>
+        <tr>
+          <!--<td>{{row.numeroLote}}</td>-->
+          <td>{{row.numeroPlanilla}}</td>
+          <td>{{row.fechaPago ? (row.fechaPago | date:'dd-MM-yyyy') : ''}}</td>
+          <td>{{row.cantAfiliados}}</td>
+          <td>{{row.monto}}</td>
+          <td>{{row.devengue}}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+  <div class="form-group row">
+    <div class="col-sm-12" style="text-align:right">
+      <span><font size="1">{{totalRecordsM}} Registros encontrados</font></span> 
+    </div>
+  </div>
+  <div class="form-group row" align="center">
+    <div class="col-sm-12">
+      <button class="btn-afp btn-afp-light-blue" (click)="hideModal(null)">
+        <i class="fa fa-close"></i> Cancelar
+      </button>
+    </div>
+  </div>
+</p-dialog>

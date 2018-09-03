@@ -1,0 +1,9 @@
+@import "~style/variables";
+
+ .ui-paginator-page a:hover  {
+  background-color: $yellow-afp-color;
+}
+
+body .ui-widget-header{
+  border: 0;
+}

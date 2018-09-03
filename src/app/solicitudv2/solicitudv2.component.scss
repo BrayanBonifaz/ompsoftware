@@ -1,0 +1,67 @@
+@import "~style/variables";
+.main-content {
+  width: 100%;
+}
+
+.main-content {
+  min-height: 450px;
+  border-bottom: 1px solid;
+  border-bottom-color: $gray-afp-color;
+}
+
+.ui-table-wrapper table thead tr{
+  height: 45px;
+  font-family: $font-family-Regular;
+  color: $blue-afp-color;
+  font-size: 1.0em;
+}
+
+.ui-table-wrapper table tbody tr{
+  font-family: $font-family-Light;
+  font-size: 0.9em;
+}
+
+.page-link {
+  border: 0;
+  font-family: $font-family-Bold;
+  vertical-align: middle;
+  position: relative;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.page-link:hover {
+  background-color: $yellow-afp-color;
+}
+
+.dialogHeader{
+  color: $blue-afp-color;
+  font-family: $font-family-Bold;
+  font-size: 18px;
+}
+.label-afp{
+  font-family: $font-family-Light;
+  font-size: 16px;
+}
+.text-danger{
+  font-size: 12px;
+ }
+.select-afp {
+  margin-top: 2px;
+  padding: 4px;
+  border: 1px solid $blue-afp-color;
+  border-radius: 5px;
+  font-family: DINPro-Regular;
+  font-size: 11px;
+  letter-spacing: .01em;
+  &:focus, &:active {
+    outline: 0;
+    border: 1px solid $yellow-afp-color;
+    border-radius: 5px;
+  }
+}
+.select-afp>option{
+  color: $blue-afp-color;
+}
+
+

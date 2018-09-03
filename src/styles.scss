@@ -1,0 +1,170 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import "~bootstrap/dist/css/bootstrap.css";
+@import "~primeng/resources/primeng.min.css";
+@import "~primeng/resources/themes/bootstrap/theme.css";
+@import "~font-awesome/css/font-awesome.min.css";
+@import "~style/variables";
+
+@font-face {
+    font-family: 'DINPro-Medium';
+    src:  url('./assets/fonts/DINPro-Medium_13936.ttf') format('truetype')
+}
+@font-face {
+    font-family: 'DINPro-Light';
+    src:  url('./assets/fonts/DINPro-Light_13935.ttf') format('truetype')
+}
+@font-face {
+    font-family: 'DINPro-Bold';
+    src:  url('./assets/fonts/DINPro-Bold_13934.ttf') format('truetype')
+}
+@font-face {
+    font-family: 'DINPro-Regular';
+    src:  url('./assets/fonts/DINPro-Regular_13937.ttf') format('truetype')
+}
+
+.table-title{
+  font-size: 1.25em;
+  font-family: $font-family-Regular;
+  padding-left: 50px;
+}
+
+
+.icon-next{
+    width: 18px;
+    height: 14px;
+    display: block;
+    background:url('./assets/images/next-ico.png');
+    background-repeat: no-repeat;    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.icon-empty{
+    width: 18px;
+    height: 14px;
+    display: block;
+}
+.icon-previous{
+    width: 18px;
+    height: 14px;
+    display: block;
+    background:url('./assets/images/previous-ico.png');
+    background-repeat: no-repeat;    background-position: center;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+.icon-last{
+    width: 18px;
+    height: 14px;
+    display: block;
+    background:url('./assets/images/last-ico.png');
+    background-repeat: no-repeat;    background-position: center;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
+}
+.icon-first{
+    width: 18px;
+    height: 16px;
+    display: block;
+    background:url('./assets/images/first-ico.png');
+    background-repeat: no-repeat;    background-position: center;
+    -webkit-background-size: cover; /* For WebKit*/
+    -moz-background-size: cover;    /* Mozilla*/
+    -o-background-size: cover;      /* Opera*/
+    background-size: cover;         /* Generic*/
+    background-size: 100%;
+}
+
+.btn-afp{
+  border: none;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 11px !important;
+}
+.btn-afp>i{
+  color: white;
+}
+
+.btn-afp-blue{
+  background-color: $blue-afp-color;
+}
+.btn-afp-blue:hover{
+  background-color: #3c6ba1;
+}
+
+.btn-afp-light-blue{
+  background-color: $light-blue-afp-color;
+}
+.btn-afp-light-blue:hover{
+  background-color: #377bc2;
+}
+.btn-afp-yellow{
+  background-color: $yellow-afp-color;
+}
+.btn-afp-yellow:hover{
+  background-color: #ebcb3b;
+}
+.text-yellow{
+  color: $yellow-afp-color;
+}
+
+.text-btn{
+  font-size: 12px;
+}
+.input-afp{
+  border: 0.1em;
+  border-color: white;
+  border-style: solid;
+  background-color: #f2f2f2;
+  border-radius: 7px;
+  font-size: 11px !important;
+  padding: 5px 5px;
+}
+.input-afp:focus{
+  border-radius: 7px;
+  border-color: $yellow-afp-color;
+  box-shadow: 2px 2px 2px rgba(255, 254, 42, 0.46);
+  outline: none;
+}
+body .ui-inputtext {
+  background: #f2f2f2;
+  border-style: solid;
+  border-color: white;
+  border-radius: 7px;
+  font-size: 0.9em !important;
+  height: 25px;
+  color: #55595c;
+}
+body .ui-inputtext.ui-state-focus,
+body .ui-inputtext:focus {
+  border-radius: 7px;
+  border-color: $yellow-afp-color;
+  box-shadow: 2px 2px 2px rgba(255, 254, 42, 0.46);
+  outline: none;
+}
+body .ui-calendar .ui-calendar-button {
+  margin-left: 5px;
+  border-radius: 7px;
+  background-color: $blue-afp-color;
+}
+.ui-calendar .ui-calendar-w-btn > input{
+  border-radius: 7px;
+}
+
+body .ui-widget{
+  font-size: 0.9em !important;
+}
+
+body .ui-dialog .ui-dialog-titlebar{
+  padding: 0.5em !important;
+}
